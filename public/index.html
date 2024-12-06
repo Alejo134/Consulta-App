@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Consulta de Matrícula</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <div class="container">
+    <h1>Consulta de Matrícula</h1>
+    <form id="consultaForm">
+      <label for="nro_matricula">Número de Matrícula:</label>
+      <input type="text" id="nro_matricula" name="nro_matricula" required>
+      <button type="submit">Consultar</button>
+    </form>
+
+    <div id="resultado" class="resultado"></div>
+  </div>
+
+  <div class="row">
+    <div class="col-md-12">
+      <p>Seleccione la forma de pago</p>
+    </div>
+  </div>
+
+
+
+
+  <button id="obtenerTokenBtn">Obtener Token y Pagar</button>
+
+  <form id="formPago" name="pago" method="POST" style="display:none;" action="https://api.epagos.net/post.php">
+    <input type="hidden" name="version" value="1.0" />
+    <input type="hidden" name="operacion" value="op_pago" />
+    <input type="hidden" name="id_organismo" value="4254" />
+    <input type="hidden" name="convenio" value="null" />
+    <input type="hidden" name="token" id="tokenField" />
+    <input type="hidden" name="id_moneda_operacion" value="1" />
+    <input type="hidden" name="monto_operacion" value="100" />
+    <input type="hidden" name="detalle_operacion" value="detalle_encodeado" />
+    <input type="hidden" name="detalle_operacion_visible" value="true" />
+    <input type="hidden" name="ok_url" value="https://www.copitec.org.ar/" />
+    <input type="hidden" name="error_url" value="https://www.copitec.org.ar/autoridades/" />
+    <input type="submit" value="Enviar Pago" />
+  </form>
+
+  <script>
+    document.getElementById('obtenerTokenBtn').addEventListener('click', function() {
+      // Hacer la solicitud al backend para obtener el token
+      fetch('/obtener-token', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+      })
+      .then(response => response.json())
+      .then(data => {
+        if (data.token) {
+          // Mostrar el formulario de pago
+          document.getElementById('formPago').style.display = 'block';
+
+          // Asignar el token al campo correspondiente del formulario
+          document.getElementById('tokenField').value = data.token;
+        } else {
+          console.error("No se pudo obtener el token");
+        }
+      })
+      .catch(error => {
+        console.error("Error al obtener el token:", error);
+      });
+    });
+  </script>
+
+  <script src="app.js"></script>
+</body>
+</html>
