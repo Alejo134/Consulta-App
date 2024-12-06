@@ -1,12 +1,10 @@
 const express = require('express');
-const bodyParser = require('body-parser');
 const mysql = require('mysql2');
 const app = express();
 const port = 3000;
-
 const path = require('path');
+
 app.use(express.static(path.join(__dirname, 'public')));
-app.use(bodyParser.urlencoded({ extended: true }));
 
 // Conexión a la base de datos MySQL
 const db = mysql.createConnection({
@@ -78,8 +76,6 @@ app.get('/consultar/:nro_matricula', (req, res) => {
       }
     });
   });
-
-
 
 
 app.listen(port, () => {
